@@ -1,0 +1,20 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t docker-react -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true docker-react npm run test
+
+deploy:
+  - docker build -t jijojames18/multi-client ./client
+  - docker build -t jijojames18/multi-worker ./worker
+  - docker build -t jijojames18/multi-nginx ./nginx
+  - docker build -t jijojames18/multi-server ./server
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push jijojames18/multi-client
+  - docker push jijojames18/multi-worker
+  - docker push jijojames18/multi-nginx
+  - docker push jijojames18/multi-server
