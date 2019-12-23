@@ -8,7 +8,7 @@ before_install:
 script:
   - docker run -e CI=true docker-react npm run test
 
-deploy:
+after_success:
   - docker build -t jijojames18/multi-client ./client
   - docker build -t jijojames18/multi-worker ./worker
   - docker build -t jijojames18/multi-nginx ./nginx
